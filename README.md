@@ -98,6 +98,7 @@ Ensure the database is migrated and seeded before running tests.
 -   **SQLite**: Selected for ease of development, compatible with other databases.
 -   **Authorization**: Used `DeckPolicy` to restrict access to user-owned or public decks.
 -   **Assumption**: Study feature displays cards randomly with answer toggling, assuming a basic self-testing approach.
+-   **API Token**: Instead of giving a path to generate token on the fly using username/password, displaying the current api token on profile page.
 
 ## AI Tool Usage Disclosure
 
