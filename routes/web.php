@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use App\Livewire\DeckShow;
 use App\Livewire\DecksList;
 use App\Livewire\ManageCard;
@@ -21,7 +22,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::view('dashboard', 'dashboard')->name('dashboard');
-    Route::view('profile', 'profile')->name('profile');
+    Route::get('profile', [ProfileController::class, 'index'])->name('profile');
 });
 
 require __DIR__.'/auth.php';

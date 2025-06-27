@@ -21,8 +21,6 @@ class DatabaseSeeder extends Seeder
         Card::create(['deck_id' => $deck1->id, 'question' => 'What is 2+2?', 'answer' => '4']);
         Card::create(['deck_id' => $deck1->id, 'question' => 'What is 3*3?', 'answer' => '9']);
         Card::create(['deck_id' => $deck2->id, 'question' => 'Who was Cleopatra?', 'answer' => 'Queen of Egypt']);
-
-        $token = $user1->createToken('flashcardpro')->plainTextToken;
     }
 
     protected function createUser(string $name): User
