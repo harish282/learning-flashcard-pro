@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         $user1 = $this->createUser('User 1');
         $user2 = $this->createUser('User 2');
 
-        $deck1 = Deck::create(['user_id' => $user1->id, 'name' => 'Math Basics', 'is_public' => true]);
+        $deck1 = Deck::create(['user_id' => $user1->id, 'name' => 'Math', 'is_public' => true]);
         $deck2 = Deck::create(['user_id' => $user2->id, 'name' => 'History', 'is_public' => false]);
 
         Card::create(['deck_id' => $deck1->id, 'question' => 'What is 2+2?', 'answer' => '4']);
