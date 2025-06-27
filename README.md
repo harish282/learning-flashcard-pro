@@ -12,10 +12,11 @@ FlashcardPro is a web application built with Laravel and Livewire, enabling user
 -   **PHP**: 8.2
 -   **Laravel**: 12.x
 -   **Livewire**: 3.x
+-   **VueJs**: 3.x
 -   **Tailwind CSS**: 3.x
 -   **Sanctum**: For API authentication
 -   **SQLite**: Database
--   **Pest/PHPUnit**: For testing
+-   **PHPUnit**: For testing
 
 ## Setup Instructions
 
@@ -92,7 +93,8 @@ Ensure the database is migrated and seeded before running tests.
 ## Architectural Decisions and Assumptions
 
 -   **Livewire**: Chosen for real-time UI interactions in card/deck management and study features, avoiding a separate frontend framework.
--   **Sanctum**: Implemented for API authentication to secure `/api/decks/{deck}/cards`.
+-   **VueJs**: Mixed with Livewire for study features, to show questions and store responses on client side.
+-   **Sanctum**: Implemented for API authentication to secure `/api/decks` and `/api/decks/{deck}/cards`.
 -   **SQLite**: Selected for ease of development, compatible with other databases.
 -   **Authorization**: Used `DeckPolicy` to restrict access to user-owned or public decks.
 -   **Assumption**: Study feature displays cards randomly with answer toggling, assuming a basic self-testing approach.
