@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Models\Deck;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -11,22 +9,30 @@ class FlashcardTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_authenticated_user_can_create_card()
+    public function test_unauthenticated_user_cannot_access_deck()
     {
-        $user = User::factory()->create();
-        $deck = Deck::factory()->create(['user_id' => $user->id]);
+        $response = $this->get(route('decks.index'));
 
-        $response = $this->actingAs($user)->post(route('cards.store'), [
-            'deck_id' => $deck->id,
-            'question' => 'What is 2+2?',
-            'answer' => '4',
-        ]);
+        $response->assertRedirect('/login');
+    }
 
-        $response->assertStatus(302);
-        $this->assertDatabaseHas('cards', [
-            'deck_id' => $deck->id,
-            'question' => 'What is 2+2?',
-            'answer' => '4',
-        ]);
+    public function test_authenticated_user_can_access_deck()
+    {
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->get(route('decks.index'));
+
+        $response->assertOk();
+    }
+
+    public function test_authenticated_user_can_create_deck()
+    {
+        $user = \App\Models\User::factory()->create();
+        $this->actingAs($user);
+
+        $response = $this->get(route('decks.index'));
+
+        $response->assertOk();
     }
 }

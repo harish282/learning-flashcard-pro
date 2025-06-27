@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Deck;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class ManageDeck extends Component
@@ -17,9 +18,18 @@ class ManageDeck extends Component
 
     public ?int $deckId = null;
 
-    protected $rules = [
-        'name' => 'required|string|max:255',
-    ];
+    protected function rules()
+    {
+        return [
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique(Deck::class, 'name')->where('user_id', auth()->user()->id)->ignore($this->deckId),
+            ],
+            'is_public' => 'boolean',
+        ];
+    }
 
     public function mount(?int $deckId = null)
     {

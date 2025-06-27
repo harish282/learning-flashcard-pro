@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Card;
 use App\Models\Deck;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 
 class ManageCard extends Component
@@ -21,15 +22,23 @@ class ManageCard extends Component
 
     protected Deck $deck;
 
-    protected $rules = [
-        'question' => 'required|string|max:255',
-        'answer' => 'required|string|max:255',
-    ];
+    protected function rules()
+    {
+        return [
+            'question' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('cards', 'question')->where('deck_id', $this->deckId)->ignore($this->cardId),
+            ],
+            'answer' => 'required|string|max:255',
+        ];
+    }
 
     public function mount(int $deckId, ?int $cardId = null)
     {
         $this->deckId = $deckId;
-        $this->deck = Deck::findOrFail($this->deckId);
+        $this->deck = Deck::findOrFail($deckId);
         $this->authorize('update', $this->deck);
 
         if ($cardId) {
@@ -42,10 +51,10 @@ class ManageCard extends Component
 
     public function saveCard()
     {
+        $this->deck = Deck::findOrFail($this->deckId);
         $this->validate();
 
         try {
-            $this->deck = Deck::findOrFail($this->deckId);
             $this->authorize('update', $this->deck);
 
             $card = Card::firstOrNew([
