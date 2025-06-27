@@ -19,10 +19,18 @@
     <div class="grid gap-4">
         <div class="mb-4">
             <form wire:submit.prevent="saveDeck">
-                <label class="label mb-2">Deck Name</label>
-                <input wire:model="name" type="text" class="input {{  $errors->has('name') ? 'input-error' : '' }} w-full" autofocus/>
-
-                @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
+                <div>
+                    <label class="label mb-2">Deck Name</label>
+                    <input wire:model="name" type="text" class="input {{  $errors->has('name') ? 'input-error' : '' }} w-full" autofocus/>
+                    @error('name') <span class="text-red-500">{{ $message }}</span> @enderror
+                </div>
+                <div class="mt-4">
+                    <label>Public?</label>
+                    <div class="flex gap-4 mt-2">
+                        <label><input wire:model="is_public" value="1" type="radio" name="is_public" class="radio" /> Yes</label>
+                        <label><input wire:model="is_public" value="0" type="radio" name="is_public" class="radio" /> No</label>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

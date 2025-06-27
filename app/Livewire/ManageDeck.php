@@ -13,6 +13,8 @@ class ManageDeck extends Component
 
     public $name = '';
 
+    public $is_public = true;
+
     public ?int $deckId = null;
 
     protected $rules = [
@@ -26,11 +28,13 @@ class ManageDeck extends Component
             $deck = Deck::findOrFail($this->deckId);
             $this->authorize('update', $deck);
             $this->name = $deck->name;
+            $this->is_public = $deck->is_public;
         }
     }
 
     public function saveDeck()
     {
+        $this->validate();
         try {
             if ($this->deckId) {
                 return $this->editDeck();
@@ -51,28 +55,27 @@ class ManageDeck extends Component
         }
     }
 
-    public function createDeck()
+    protected function createDeck()
     {
-        $this->validate();
         Deck::create([
             'user_id' => Auth::id(),
             'name' => $this->name,
+            'is_public' => $this->is_public,
         ]);
-        $this->name = '';
+        $this->reset();
+
         session()->flash('success', 'Deck created successfully.');
 
         return redirect()->route('decks.index');
     }
 
-    public function editDeck()
+    protected function editDeck()
     {
-        $this->validate();
-
         $deck = Deck::findOrFail($this->deckId);
         $this->authorize('update', $deck);
 
-        $deck->update(['name' => $this->name]);
-        $this->name = '';
+        $deck->update(['name' => $this->name, 'is_public' => $this->is_public]);
+        $this->reset();
 
         session()->flash('success', 'Deck updated successfully.');
 
