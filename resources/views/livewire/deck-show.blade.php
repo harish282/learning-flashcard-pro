@@ -2,8 +2,8 @@
     <div class="navbar bg-base-100 shadow-sm">
         <div class="navbar-start">
             <a class="btn btn-ghost btn-circle" href="{{ route('decks.index') }}" wire:navigate>
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/>
+                <svg class="icon">
+                    <use xlink:href="{{ asset('icons.svg') }}#go-back"></use>
                 </svg>
             </a>
         </div>
