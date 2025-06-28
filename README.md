@@ -32,6 +32,7 @@ This is a standard Laravel project. Follow these steps to set it up locally:
 2. **Install Composer Dependencies**:
 
     ```bash
+    mkdir bootstrap/cache
     composer install
     ```
 
@@ -53,13 +54,20 @@ This is a standard Laravel project. Follow these steps to set it up locally:
     ```
     DB_CONNECTION=sqlite
     SESSION_DOMAIN=localhost
-    SANCTUM_STATEFUL_DOMAINS=localhost
+    SANCTUM_STATEFUL_DOMAINS=localhost,localhost:8000
     ```
 
     Create the SQLite database file:
 
     ```bash
     touch database/database.sqlite
+    ```
+
+    Clear the config cache:
+
+    ```bash
+    php artisan config:clear
+    php artisan config:cache
     ```
 
 5. **Generate Application Key**:

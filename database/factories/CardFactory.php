@@ -17,7 +17,8 @@ class CardFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'question' => $this->faker->unique()->words(3, true),
+            'answer' => $this->faker->unique()->words(3, true),
         ];
     }
 }
