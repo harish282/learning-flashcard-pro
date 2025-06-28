@@ -93,6 +93,7 @@ This is a standard Laravel project. Follow these steps to set it up locally:
 To execute the test suite:
 
 ```bash
+php artisan optimize:clear
 php artisan test
 ```
 
