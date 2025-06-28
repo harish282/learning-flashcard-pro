@@ -25,7 +25,7 @@ This is a standard Laravel project. Follow these steps to set it up locally:
 1. **Clone the Repository**:
 
     ```bash
-    git clone https://github.com/harish282/learning-flashcard-pro
+    git clone https://github.com/harish282/learning-flashcard-pro flashcardpro
     cd flashcardpro
     ```
 
