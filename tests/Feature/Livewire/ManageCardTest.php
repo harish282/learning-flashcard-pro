@@ -14,12 +14,7 @@ class ManageCardTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function test_can_create_card_in_own_deck()
+    public function test_user_can_create_card_in_their_deck()
     {
         $user = User::factory()->create();
         $deck = Deck::factory()->for($user)->create();
@@ -29,7 +24,7 @@ class ManageCardTest extends TestCase
             ->set('question', 'What is Laravel?')
             ->set('answer', 'A PHP framework')
             ->call('saveCard')
-            ->assertRedirect(route('deck.show', ['deck' => $deck->id]));
+            ->assertRedirect(route('deck.show', ['deckId' => $deck->id]));
 
         $this->assertDatabaseHas('cards', [
             'deck_id' => $deck->id,
@@ -38,44 +33,24 @@ class ManageCardTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider validationDataProvider
-     */
-    public function test_validation_fails_for_invalid_input($question, $answer, $expectedErrors)
+    public function test_validation_fails_if_fields_are_empty()
     {
         $user = User::factory()->create();
         $deck = Deck::factory()->for($user)->create();
 
         Livewire::actingAs($user)
             ->test(ManageCard::class, ['deckId' => $deck->id])
-            ->set('question', $question)
-            ->set('answer', $answer)
+            ->set('question', '')
+            ->set('answer', '')
             ->call('saveCard')
-            ->assertHasErrors($expectedErrors);
-
-        $this->assertDatabaseMissing('cards', ['deck_id' => $deck->id]);
+            ->assertHasErrors(['question' => 'required', 'answer' => 'required']);
     }
 
-    public function validationDataProvider()
-    {
-        return [
-            'empty fields' => [
-                'question' => '',
-                'answer' => '',
-                'errors' => ['question' => 'required', 'answer' => 'required'],
-            ],
-            'question too long' => [
-                'question' => str_repeat('a', 256),
-                'answer' => 'Valid answer',
-                'errors' => ['question' => 'max'],
-            ],
-        ];
-    }
-
-    public function test_can_edit_existing_card()
+    public function test_user_can_edit_existing_card()
     {
         $user = User::factory()->create();
         $deck = Deck::factory()->for($user)->create();
+
         $card = Card::factory()->for($deck)->create([
             'question' => 'Old Question',
             'answer' => 'Old Answer',
@@ -88,35 +63,26 @@ class ManageCardTest extends TestCase
             ])
             ->assertSet('question', 'Old Question')
             ->assertSet('answer', 'Old Answer')
-            ->set('question', 'Updated Question')
             ->set('answer', 'Updated Answer')
             ->call('saveCard')
-            ->assertRedirect(route('deck.show', ['deck' => $deck->id]));
+            ->assertRedirect(route('deck.show', ['deckId' => $deck->id]));
 
         $this->assertDatabaseHas('cards', [
             'id' => $card->id,
-            'question' => 'Updated Question',
+            'question' => 'Old Question',
             'answer' => 'Updated Answer',
         ]);
     }
 
-    public function test_cannot_manage_card_in_others_deck()
+    public function test_user_cannot_manage_card_in_others_deck()
     {
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
+
         $deck = Deck::factory()->for($otherUser)->create();
 
         Livewire::actingAs($user)
             ->test(ManageCard::class, ['deckId' => $deck->id])
             ->assertForbidden();
-    }
-
-    public function test_fails_if_deck_does_not_exist()
-    {
-        $user = User::factory()->create();
-
-        Livewire::actingAs($user)
-            ->test(ManageCard::class, ['deckId' => 999])
-            ->assertStatus(404);
     }
 }

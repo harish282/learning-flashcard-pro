@@ -20,7 +20,7 @@ class ManageCard extends Component
 
     public ?int $cardId = null;
 
-    protected Deck $deck;
+    protected ?Deck $deck = null;
 
     protected function rules()
     {
@@ -46,6 +46,14 @@ class ManageCard extends Component
             $card = $this->deck->cards()->findOrFail($this->cardId);
             $this->question = $card->question;
             $this->answer = $card->answer;
+        }
+    }
+
+    public function boot()
+    {
+        if ($this->deckId && ! $this->deck) {
+            $this->deck = Deck::findOrFail($this->deckId);
+            $this->authorize('view', $this->deck);
         }
     }
 
